@@ -12,11 +12,11 @@ public class makeTree {
 	 */
 	public static void main(String[] args) throws Exception {
 		String[] args2 = new String[0];
-		
+
 		globalAlign ga = new globalAlign(args2);
 		List<String> alignments = ga.getAligned1();
 
-		Double[][] distanceMatrixies = new 	Double[alignments.size()][alignments.size()];
+		TreeNode[][] distanceMatrixies = new TreeNode[alignments.size()][alignments.size()];
 		String lowestIndex = "";
 		Double lowestNumber = Double.MAX_VALUE;
 		for(int i = 0; i < alignments.size(); i++){
@@ -28,10 +28,18 @@ public class makeTree {
 				}
 			}
 		}
+		int oldLowest = 0;
+		for(int i = 0; i < alignments.size(); i++){
+			for(int j = alignments.size(); j > i; j--){
+				
+				
+			}
+
+		}
 
 	}
 
-	private static Double returnDistance(String aligned1, String aligned2) throws Exception{
+	private static Treenode returnDistance(String aligned1, String aligned2) throws Exception{
 
 		if(aligned1.length() != aligned2.length()){
 			throw new Exception("Aligned pairs not the same size");
@@ -41,9 +49,9 @@ public class makeTree {
 			if(aligned2.charAt(i)== aligned1.charAt(i)) similar++;
 		}
 		Double distance = (double) (similar / aligned1.length());
-		return distance;
-		
-		
+		return TreeNode(aligned1, aligned2, distance);
+
+
 	}
 
 
