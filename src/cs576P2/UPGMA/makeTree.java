@@ -1,8 +1,11 @@
 package cs576P2.UPGMA;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import cs576P2.GlobalAlignment.globalAlign;
+import java.util.regex.Pattern;
 
 public class makeTree {
 
@@ -11,48 +14,46 @@ public class makeTree {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		String[] args2 = new String[0];
+		if(args.length != 2){
+			System.out.println("Not Correct # of Arguements");
+			System.exit(0);
+		}
+		String seq1FileName = args[0];
+		String ending = args[1];
+		List<sequenceString> sequences = new ArrayList<sequenceString>();
 
-		globalAlign ga = new globalAlign(args2);
-		List<String> alignments = ga.getAligned1();
-
-		TreeNode[][] distanceMatrixies = new TreeNode[alignments.size()][alignments.size()];
-		String lowestIndex = "";
-		Double lowestNumber = Double.MAX_VALUE;
-		for(int i = 0; i < alignments.size(); i++){
-			for(int j = alignments.size(); j > i; j--){
-				distanceMatrixies[i][j] = returnDistance(alignments.get(i), alignments.get(j));
-				if(distanceMatrixies[i][j] < lowestNumber){
-					lowestNumber = distanceMatrixies[i][j];
-					lowestIndex = i + "," + j;
-				}
+		try{
+			File s1file = new File(seq1FileName + ending);
+			BufferedReader  reader = new BufferedReader(new FileReader(s1file));
+			String s1 = reader.readLine();
+			sequenceString ss;
+			if(Pattern.matches("[>].+", s1)){
+				s1 = s1.substring(1);
+				ss = new sequenceString(s1, reader.readLine());
+				sequences.add(ss);
 			}
+			else throw new Exception("Bad File Format");
+		}catch(Exception e){
+			System.out.println("Failed to open file");
 		}
-		int oldLowest = 0;
-		for(int i = 0; i < alignments.size(); i++){
-			for(int j = alignments.size(); j > i; j--){
-				
-				
-			}
+		
 
-		}
-
-	}
-
-	private static Treenode returnDistance(String aligned1, String aligned2) throws Exception{
-
-		if(aligned1.length() != aligned2.length()){
-			throw new Exception("Aligned pairs not the same size");
-		}
-		int similar = 0;
-		for (int i = 0; i < aligned1.length(); i++){
-			if(aligned2.charAt(i)== aligned1.charAt(i)) similar++;
-		}
-		Double distance = (double) (similar / aligned1.length());
-		return TreeNode(aligned1, aligned2, distance);
 
 
 	}
 
-
+	
+	
+	
+	
+	
+	
+	public static class sequenceString{
+		public String seqName;
+		public String seqString;
+		public sequenceString(String seqName, String seqString){
+			this.seqName = seqName;
+			this.seqString = seqString;
+		}
+	}
 }
