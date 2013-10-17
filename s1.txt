@@ -1,0 +1,4 @@
+>s1
+ATAATAA
+>s2
+ATCGATT
