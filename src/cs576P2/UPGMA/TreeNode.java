@@ -3,6 +3,11 @@ package cs576P2.UPGMA;
 public class TreeNode {
 private String seq1;
 private TreeNode childNode1;
+private TreeNode childNode2;
+private String name;
+private int childrenCount;
+
+
 public TreeNode(String seq1, TreeNode childNode1, TreeNode childNode2,
 		String name, int childrenCount) {
 	super();
@@ -12,9 +17,6 @@ public TreeNode(String seq1, TreeNode childNode1, TreeNode childNode2,
 	this.name = name;
 	this.childrenCount = childrenCount;
 }
-private TreeNode childNode2;
-private String name;
-private int childrenCount;
 
 public String getSeq1() {
 	return seq1;

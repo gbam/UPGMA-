@@ -63,7 +63,7 @@ public class globalAlign {
 		}
 		s1 = " " + s1;
 		s2 = " " + s2;
-		Paths overalShortestPath = calculateGlobal(s1, s2);
+		calculateGlobal(s1, s2);
 				
 	}
 	
@@ -93,8 +93,8 @@ public class globalAlign {
 				tempScore += cc.score;
 			}
 			totalScore.add(tempScore);
-//			System.out.print(" 			Score: " + tempScore);
-//			System.out.println("");
+			System.out.print(" 			Score: " + tempScore);
+			System.out.println("");
 		}
 		Integer lowestIndex = Integer.MIN_VALUE;
 		Paths lowestPath = null;
@@ -105,16 +105,13 @@ public class globalAlign {
 				
 		}
 
-//		System.out.println("");
-//		System.out.println("");
-//		System.out.println("");
 		int tempScore = 0;
 		for (Cell cc: lowestPath.paths){
-//				System.out.print(" || " + cc.row + "," + cc.col);
 				tempScore += cc.score;
 			
 		}
-		System.out.print(" 			Score: " + tempScore);
+		System.out.println("");
+		System.out.print("     Best Score: " + tempScore);
 		Paths overalShortestPath = lowestPath;
 		int lastRow = -1;
 		int lastCol = -1;
@@ -129,7 +126,7 @@ public class globalAlign {
 			}
 			if(lastRow == c.row) seq1 = seq1 + "-";
 			else {
-				seq1 = seq1 + s2.charAt(c.row);
+				seq1 = seq1 + s1.charAt(c.row);
 				lastRow = c.row;
 			}
 			
@@ -137,6 +134,8 @@ public class globalAlign {
 			
 		}
 		System.out.println("");
+		System.out.println("");
+		System.out.println("Output Line:");
 		for(char c : seq1.toCharArray()) {
 			System.out.print(c);        
 		    //Process char

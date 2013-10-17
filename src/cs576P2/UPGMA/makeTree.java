@@ -74,8 +74,8 @@ public class makeTree {
 					lowest = dt[j][i];
 					col = i;
 					row = j;
-					lowestNodeA = lowest.getNodeOne(); 
-					lowestNodeB = lowest.getNodeTwo();
+					lowestNodeA = lowest.getNodeOne().getLast(); 
+					lowestNodeB = lowest.getNodeTwo().getLast();
 				}
 
 			}
@@ -94,28 +94,75 @@ public class makeTree {
 		Distance[][] newDT = new Distance[dt.length-1][dt.length-1];
 		List<Distance> partOne = new ArrayList<Distance>();
 
+		
+		//This creates the new last column
+		Distance[] temp = new Distance[dt.length];
 		for(int i = 0; i < dt.length; i++){
-			Double cost = 0.0;
-			TreeNode n1 = null;
-			TreeNode n2 = null;
-			for(int j = dt[0].length; j  > i; j--){
-				if((col != i && row != j) || (col != j && row != i)){
-					partOne.add(dt[i][j]);
+			Double total = 0.0;
+			Distance d1, d2;
+			if(row != i && col != i){
+				if(col > i)	{
+					d1 = dt[col][i];
+					total += dt[col][i].getDistance(); 
+				}
+				else {
+					d1 = dt[i][col];
+					total += dt[i][col].getDistance(); 
+				}
+				if(row > i){
+					d2 = dt[row][i];
+					total += dt[row][i].getDistance(); 
 				}
 				else{
-					cost += dt[i][j].getDistance();
+					d2 = dt[i][row];
+					total += dt[i][row].getDistance();
 				}
-
+				
+				//This nasty block of code merges the two nodes to get a new distance node to put back into the distance table.
+				//Ew.
+				int nodeACount = d1.getNodeTwo().getLast().getChildrenCount() + d1.getNodeOne().getLast().getChildrenCount();
+				int nodeBCount = d2.getNodeTwo().getLast().getChildrenCount() + d2.getNodeOne().getLast().getChildrenCount();
+				TreeNode d1Last1 = d1.getNodeOne().getLast();
+				TreeNode d1Last2 = d1.getNodeTwo().getLast();
+				TreeNode d2Last1 = d2.getNodeOne().getLast();
+				TreeNode d2Last2 = d2.getNodeTwo().getLast();
+				TreeNode a = new TreeNode(null, d1Last1, d1Last2, d1Last1.getName() + "-" + d1Last2.getName(), nodeACount);
+				TreeNode b = new TreeNode(null, d2Last1, d2Last2, d2Last1.getName() + "-" + d2Last2.getName(), nodeBCount);
+				Distance d = new Distance(total, a, b);
+				temp[i] = d;
 			}
-			Distance d = new Distance(cost,n1,n2);
-			newDT[i][newDT.length-1] = d;
+			else
+			{
+				temp[i] = null;
+			}
+
+			
+		}
+
+
+
+		for(int i = 0; i < dt.length-1; i++){
+			for(int j = dt[0].length - 1; j  > i; j--){
+				if(i == row && j == col){}
+				else if(j == row && i ==col){}//Do Nothing;
+				else{		
+					//@TODO This doesn't work.  This isn't creating the new array correctly.
+					partOne.add(dt[j][i]);
+				}
+			}
 		}
 		Iterator<Distance> itr = partOne.iterator();
 
+		//This could be put into one loop but it makes sense in my mind this way.
+		//Fills the new DT except last column
 		for(int i = 1; i < newDT.length-1; i++){
-			for(int j = i + 1; j < newDT.length - 1; j++){
-				newDT[i][j] = itr.next();
+			for(int j = i; j < newDT[0].length; j++){
+				if(j !=  newDT[0].length - 1 || i !=  newDT[0].length - 1)newDT[i][j] = itr.next();
 			}
+		}
+		//Adds the new last column
+		for(int i = 0; i < newDT.length; i++){
+			newDT[newDT.length-1][i] = temp[i];
 		}
 
 
@@ -146,7 +193,7 @@ public class makeTree {
 				String s1 = ga.StringOne();
 				String s2 = ga.StringTwo();
 				TreeNode nRow = new TreeNode(s1, null,null, row.seqName, 0);
-				TreeNode nCol = new TreeNode(s2, null,null, row.seqName, 0);
+				TreeNode nCol = new TreeNode(s2, null,null, column.seqName, 0);
 				Distance d = new Distance(similarity(s1, s2), nRow, nCol);
 				dt[j][i] = d;
 			}
