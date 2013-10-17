@@ -47,6 +47,14 @@ public class makeTree {
 		//Input is parsed at this point
 		Distance[][] dt = calclateDistanceMatrix(sequences);
 
+		if(dt.length == 2 && dt[0].length == 2){
+			SequenceString seq1 = sequences.get(0);
+			SequenceString seq2 = sequences.get(1);
+			TreeNode n1 = new TreeNode(seq1.seqString, null, null, seq1.seqName, 0);
+			TreeNode n2 = new TreeNode(seq2.seqString, null, null, seq2.seqName, 0);
+			mergeCells(n1, n2);
+			System.exit(0);
+		}
 		//Now we have a distance matrix and need to find the lowest
 
 		findLowest(dt);
@@ -61,9 +69,9 @@ public class makeTree {
 		TreeNode lowestNodeA = null;
 		TreeNode lowestNodeB = null;
 		for(int i = 0; i < dt.length; i++){
-			for(int j = dt.length; j  > i; j--){
-				if(lowest == null || lowest.getDistance() > dt[i][j].getDistance()){
-					lowest = dt[i][j];
+			for(int j = dt.length-1; j  > i; j--){
+				if(lowest == null || lowest.getDistance().compareTo((dt[j][i].getDistance())) > 0){
+					lowest = dt[j][i];
 					col = i;
 					row = j;
 					lowestNodeA = lowest.getNodeOne(); 
@@ -72,6 +80,9 @@ public class makeTree {
 
 			}
 
+		}
+		if(lowest == null){
+			System.out.println("Finished");
 		}
 
 		mergeCells(lowestNodeA, lowestNodeB);
@@ -112,9 +123,10 @@ public class makeTree {
 	}
 	//Merges two tree nodes
 	private static TreeNode mergeCells(TreeNode a, TreeNode b){
-		TreeNode rt = new TreeNode("", a, b, a.getName() + "," + b.getName(), a.getChildrenCount() + b.getChildrenCount() + 2);
-		System.out.println(rt.getName() + " - " + a.getName());
-		System.out.println(rt.getName() + " - " + b.getName());
+		TreeNode rt = new TreeNode("", a, b, a.getName() + "-" + b.getName(), a.getChildrenCount() + b.getChildrenCount() + 2);
+		System.out.println("");
+		System.out.println(rt.getName() + "   " + a.getName());
+		System.out.println(rt.getName() + "   " + b.getName());
 		return rt;
 	}
 

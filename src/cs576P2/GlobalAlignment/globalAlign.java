@@ -41,19 +41,19 @@ public class globalAlign {
 	 * @throws Exception 
 	 */
 	public static void main(String[] args) throws Exception {
-		if(args.length != 3){
+		if(args.length != 4){
 			System.out.println("Not Correct # of Arguements");
 			System.exit(0);
 		}
 		String seq1FileName = args[0];
-		String seq2FileName = args[1];
-		String ending = args[2];
+		String seq2FileName = args[2];
+		String ending = args[1];
 		String s1 = "";
 		String s2 = "";
 
 		try{
-			File s1file = new File(seq1FileName + ending);
-			File s2file = new File(seq2FileName + ending);
+			File s1file = new File(seq1FileName + "." + ending);
+			File s2file = new File(seq2FileName + "." + ending);
 			BufferedReader  reader = new BufferedReader(new FileReader(s1file));
 			s1 = reader.readLine();
 			reader = new BufferedReader(new FileReader(s2file));
@@ -64,11 +64,7 @@ public class globalAlign {
 		s1 = " " + s1;
 		s2 = " " + s2;
 		Paths overalShortestPath = calculateGlobal(s1, s2);
-		for(Cell c: overalShortestPath.paths){
-			seq1 = seq1 + s1.charAt(c.col);
-			seq2 = seq2 + s1.charAt(c.row);
-		}
-		
+				
 	}
 	
 	private static Paths calculateGlobal(String s1, String s2) throws Exception{
@@ -97,8 +93,8 @@ public class globalAlign {
 				tempScore += cc.score;
 			}
 			totalScore.add(tempScore);
-			System.out.print(" 			Score: " + tempScore);
-			System.out.println("");
+//			System.out.print(" 			Score: " + tempScore);
+//			System.out.println("");
 		}
 		Integer lowestIndex = Integer.MIN_VALUE;
 		Paths lowestPath = null;
@@ -109,21 +105,47 @@ public class globalAlign {
 				
 		}
 
-		System.out.println("");
-		System.out.println("");
-		System.out.println("");
+//		System.out.println("");
+//		System.out.println("");
+//		System.out.println("");
 		int tempScore = 0;
 		for (Cell cc: lowestPath.paths){
-				System.out.print(" || " + cc.row + "," + cc.col);
+//				System.out.print(" || " + cc.row + "," + cc.col);
 				tempScore += cc.score;
 			
 		}
 		System.out.print(" 			Score: " + tempScore);
 		Paths overalShortestPath = lowestPath;
-		for(Cell c: overalShortestPath.paths){
-			seq1 = seq1 + s1.charAt(c.col);
-			seq2 = seq2 + s1.charAt(c.row);
+		int lastRow = -1;
+		int lastCol = -1;
+		seq2 = "";
+		seq1 = "";
+		for(int i = overalShortestPath.paths.size() -1; i >= 0; i--){
+		Cell c = overalShortestPath.paths.get(i);
+			if(lastCol == c.col) seq2 = seq2 + "-";
+			else {
+				seq2 = seq2 + s2.charAt(c.col);
+				lastCol = c.col;
+			}
+			if(lastRow == c.row) seq1 = seq1 + "-";
+			else {
+				seq1 = seq1 + s2.charAt(c.row);
+				lastRow = c.row;
+			}
+			
+			
+			
 		}
+		System.out.println("");
+		for(char c : seq1.toCharArray()) {
+			System.out.print(c);        
+		    //Process char
+		}
+		System.out.println("");
+		for(char c : seq2.toCharArray()) {
+			System.out.print(c);        
+		}
+		System.out.println("");
 		return lowestPath;
 		}
 
