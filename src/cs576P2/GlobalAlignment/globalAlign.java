@@ -23,8 +23,16 @@ public class globalAlign {
 		seq2 = "";
 		Paths overalShortestPath = calculateGlobal(s1, s2);
 		for(Cell c: overalShortestPath.paths){
-			seq1 = seq1 + s1.charAt(c.col);
-			seq2 = seq2 + s1.charAt(c.row);
+			try{
+				seq1 = seq1 + s1.charAt(c.col);
+			}catch(Exception e){
+				seq1 = seq1 + "-";
+			}
+			try{
+			seq2 = seq2 + s2.charAt(c.row);
+			}catch(Exception e){
+				seq2 = seq2 + "-";
+			}
 		}
 		
 	}
